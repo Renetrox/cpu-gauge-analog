@@ -38,6 +38,21 @@ local function draw_needle(cr, cx, cy, value, length)
     cairo_stroke(cr)
 end
 
+-- Cuadrito central (tapa el centro de la aguja)
+local function draw_center_cap(cr, cx, cy, size)
+    local half = size / 1.9
+
+    -- Fondo del cuadrado (gris claro)
+    cairo_set_source_rgba(cr, 0.9, 0.9, 0.9, 1)
+    cairo_rectangle(cr, cx - half, cy - half, size, size)
+    cairo_fill(cr)
+
+    -- Borde (gris más oscuro)
+    cairo_set_source_rgba(cr, 0.4, 0.4, 0.4, 1)
+    cairo_set_line_width(cr, 2.9)
+    cairo_rectangle(cr, cx - half, cy - half, size, size)
+    cairo_stroke(cr)
+end
 
 -- Texto centrado (para los porcentajes)
 local function draw_text_center(cr, text, x, y, size)
@@ -93,8 +108,12 @@ function conky_main()
     local ram = tonumber(conky_parse("${memperc}")) or 0
 
     -- Longitud de agujas
-    draw_needle(cr, cpu_cx, cpu_cy, cpu, 32)   -- CPU
-    draw_needle(cr, ram_cx,  ram_cy,  ram, 30) -- RAM
+    draw_needle(cr, cpu_cx, cpu_cy, cpu, 22)   -- CPU
+    draw_needle(cr, ram_cx,  ram_cy,  ram, 20) -- RAM
+
+    -- Cuadritos centrales (van DESPUÉS de las agujas para tapar el centro)
+    draw_center_cap(cr, cpu_cx, cpu_cy, 12)    -- CPU
+    draw_center_cap(cr, ram_cx,  ram_cy, 10)   -- RAM
 
     -- ============================
     --  PORCENTAJES DINÁMICOS
